@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>JZZ.input.Kbd test</title>
+<script src="node_modules/jzz/javascript/JZZ.js"></script>
+<script src="javascript/JZZ.input.Kbd.js"></script>
+<style type="text/css">
+.inner {position:absolute; bottom:0; left:0; width:100%; text-align:center;}
+</style>
+</head>
+
+<body>
+<h1>JZZ.input.Kbd test</h1>
+<div id=piano></id>
+
+<script><!--
+var piano = JZZ.input.Kbd({at: 'piano', from:'C5', to:'B5', onCreate: function(){
+  this.getBlackKeys().setStyle({color:'#fff'});
+  this.getKey('C5').setInnerHTML('<span class=inner>Z</span>');
+  this.getKey('C#5').setInnerHTML('<span class=inner>S</span>');
+  this.getKey('D5').setInnerHTML('<span class=inner>X</span>');
+  this.getKey('D#5').setInnerHTML('<span class=inner>D</span>');
+  this.getKey('E5').setInnerHTML('<span class=inner>C</span>');
+  this.getKey('F5').setInnerHTML('<span class=inner>V</span>');
+  this.getKey('F#5').setInnerHTML('<span class=inner>G</span>');
+  this.getKey('G5').setInnerHTML('<span class=inner>B</span>');
+  this.getKey('G#5').setInnerHTML('<span class=inner>H</span>');
+  this.getKey('A5').setInnerHTML('<span class=inner>N</span>');
+  this.getKey('A#5').setInnerHTML('<span class=inner>J</span>');
+  this.getKey('B5').setInnerHTML('<span class=inner>M</span>');
+}});
+piano.connect(JZZ().openMidiOut());
+JZZ.input.ASCII({Z:'C5', S:'C#5', X:'D5', D:'D#5', C:'E5', V:'F5', G:'F#5', B:'G5', H:'Ab5', N:'A5', J:'Bb5', M:'B5'}).connect(piano);
+--></script>
+
+<p>
+<a href=https://jazz-soft.net>https://jazz-soft.net</a>
+</p>
+
+</body>
+</html>
