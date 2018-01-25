@@ -79,7 +79,7 @@
       this.at.removeEventListener('keydown', this.keydown);
       this.at.removeEventListener('keyup', this.keyup);
       for (var midi in self.playing) self.noteOff(midi);
-    }
+    };
   }
 
   function AsciiEngine() {}
@@ -91,16 +91,16 @@
       manufacturer: 'virtual',
       version: _version
     };
-  }
+  };
 
   AsciiEngine.prototype._openIn = function(port, name) {
     var keyboard = new Keyboard(this._arg);
     keyboard.noteOn = function(note) { port._emit(JZZ.MIDI(0x90 + this.chan, note, 127)); };
     keyboard.noteOff = function(note) { port._emit(JZZ.MIDI(0x80 + this.chan, note, 127)); };
     port._info = this._info(name);
-    port._close = function() { keyboard._close(); }
+    port._close = function() { keyboard._close(); };
     port._resume();
-  }
+  };
 
   JZZ.input.ASCII = function() {
     var name, arg;
@@ -109,10 +109,10 @@
       else arg = arguments[0];
     }
     else { name = arguments[0]; arg = arguments[1];}
-    var _AsciiEngine = new AsciiEngine;
+    var _AsciiEngine = new AsciiEngine();
     _AsciiEngine._arg = arg;
     return JZZ.lib.openMidiIn(name, _AsciiEngine);
-  }
+  };
 
   JZZ.input.ASCII.register = function() {
     var name, arg;
@@ -121,10 +121,10 @@
       else arg = arguments[0];
     }
     else { name = arguments[0]; arg = arguments[1];}
-    var _AsciiEngine = new AsciiEngine;
+    var _AsciiEngine = new AsciiEngine();
     _AsciiEngine._arg = arg;
     return JZZ.lib.registerMidiIn(name, _AsciiEngine);
-  }
+  };
 
   var _firefoxBug;
   function _fixBtnUp(e) {
@@ -134,6 +134,7 @@
     if (e.button == 1) return {buttons:_firefoxBug^4};
     if (e.button == 2) return {buttons:_firefoxBug^2};
   }
+
   function _lftBtnDn(e) { return typeof e.buttons == 'undefined' ? !e.button : e.buttons & 1; }
   function _lftBtnUp(e) { return typeof e.buttons == 'undefined' ? !e.button : !(e.buttons & 1); }
   function _stay(c, p) { for (; c; c = c.parentNode) if (c == p) return true; return false; }
@@ -141,13 +142,16 @@
   function _style(key, stl) {
     for(var k in stl) key.style[k] = stl[k];
   }
+
   function _keyNum(n, up) {
     n = JZZ.MIDI.noteValue(n);
     return (up ? [0, 1, 1, 2, 2, 3, 4, 4, 5, 5, 6, 6] : [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6])[n % 12] + Math.floor(n / 12) * 7;
   }
+
   function _keyMidi(n) {
     return Math.floor(n / 7) * 12 + {0:0, 1:2, 2:4, 3:5, 4:7, 5:9, 6:11}[n % 7];
   }
+
   function _handleMouseDown(piano, midi) {
     return function(e) {
       if (_lftBtnDn(e) && !piano.playing[midi]) {
@@ -158,6 +162,7 @@
       _firefoxBug = e.buttons;
     };
   }
+
   function _handleMouseOver(piano, midi) {
     return function(e) {
       if (piano.mouseDown && !piano.playing[midi]) {
@@ -167,6 +172,7 @@
       _firefoxBug = e.buttons;
     };
   }
+
   function _handleMouseOut(piano, midi) {
     return function(e) {
       if (piano.mouseDown && piano.playing[midi] == 'M' && !_stay(e.relatedTarget, this)) {
@@ -176,6 +182,7 @@
       _firefoxBug = e.buttons;
     };
   }
+
   function _handleMouseUp(piano, midi) {
     return function(e) {
       e = _fixBtnUp(e);
@@ -186,24 +193,28 @@
       }
     };
   }
+
   function _handleMouseOff(piano) {
     return function(e) {
       e = _fixBtnUp(e);
       if (_lftBtnUp(e)) piano.mouseDown = false;
     };
   }
+
   function _watchMouseButtons() {
     return function(e) {
       _firefoxBug = e.buttons;
     };
   }
+
   function _handleTouch(piano) {
     return function(e) {
       e.preventDefault();
       var t = {};
       for (var i in e.touches) piano.findKey(e.touches[i].clientX, e.touches[i].clientY, t);
       var tt = {};
-      for (var midi in t) {
+      var midi;
+      for (midi in t) {
         if (midi in piano.touches) tt[midi] = true;
         else if (typeof piano.playing[midi] == 'undefined') {
           piano.playing[midi] = 'T';
@@ -211,7 +222,7 @@
           tt[midi] = true;
         }
       }
-      for (var midi in piano.touches) {
+      for (midi in piano.touches) {
         if (!(midi in t)) {
           piano.playing[midi] = undefined;
           piano.release(midi);
@@ -244,30 +255,34 @@
         if ((k == 'from' || k == 'to') && (typeof this.params[key][k] == 'undefined' || typeof JZZ.MIDI.noteValue(this.params[key][k]) == 'undefined')) this.params[key][k] = common[k];
         if (!(k in this.params[key])) this.params[key][k] = common[k];
       }
-      var from = this.params[key]['from'];
-      var to = this.params[key]['to'];
+      var from = this.params[key].from;
+      var to = this.params[key].to;
       if (JZZ.MIDI.noteValue(from) > JZZ.MIDI.noteValue(to)) {
-        this.params[key]['from'] = to;
-        this.params[key]['to'] = from;
+        this.params[key].from = to;
+        this.params[key].to = from;
       }
     }
-    this.bins.sort(function(a, b){return a-b});
+    this.bins.sort(function(a, b) { return a - b;});
   }
+
   Piano.prototype._close = function() {
     for (var midi in this.playing) if (this.playing[midi] == 'M' || this.playing[midi] == 'T') this.noteOff(midi);
     if (this.resize) window.removeEventListener('resize', this.resize);
     this.cleanup();
-  }
+  };
+
   Piano.prototype.press = function(midi) {
     _style(this.keys[midi], this.stl1[midi]);
     _style(this.keys[midi], this.locs[midi]);
     this.noteOn(midi);
-  }
+  };
+
   Piano.prototype.release = function(midi) {
     _style(this.keys[midi], this.stl0[midi]);
     _style(this.keys[midi], this.locs[midi]);
     this.noteOff(midi);
-  }
+  };
+
   Piano.prototype.forward = function(msg) {
     var n = msg[1];
     if (msg.getChannel() == this.chan) {
@@ -291,7 +306,8 @@
       }
     }
     this.emit(msg);
-  }
+  };
+
   Piano.prototype.findKey = function(x, y, ret) {
     for (var midi in this.keys) {
       for (var elm = document.elementFromPoint(x, y); elm; elm = elm.parentNode) {
@@ -301,7 +317,8 @@
         }
       }
     }
-  }
+  };
+
   Piano.prototype.create = function() {
     var bin = 0;
     for (var i = 0; i < this.bins.length; i++) {
@@ -310,7 +327,8 @@
     }
     this.current = this.params[bin];
     this.createCurrent();
-  }
+  };
+
   Piano.prototype.createCurrent = function() {
     this.cleanup();
     this.keys = {}; this.locs = {};
@@ -325,12 +343,13 @@
     try { this.createAt(this.current.at); }
     catch(e) {
       if (!this.bottom) {
-        this.bottom = document.createElement('div'); 
+        this.bottom = document.createElement('div');
         document.body.appendChild(this.bottom);
       }
       this.createAt(this.bottom);
     }
-  }
+  };
+
   Piano.prototype.createWithKeys = function(keys) {
     for (var k in keys) {
       var midi = JZZ.MIDI.noteValue(keys[k][1]);
@@ -343,7 +362,8 @@
     }
     if (this.current.onCreate) this.current.onCreate.apply(this);
     this.setListeners();
-  }
+  };
+
   Piano.prototype.createAt = function(at) {
     at.innerHTML = '';
     var pos = this.current.pos.toUpperCase();
@@ -456,9 +476,11 @@
     this.current.at = at;
     this.at = at;
     this.setListeners();
-  }
+  };
+
   Piano.prototype.setListeners = function() {
     var active = typeof this.current.active == 'undefined' || this.current.active;
+    var midi;
     if (active) {
       this.watchButtons = _watchMouseButtons();
       this.mouseUpHandle = _handleMouseOff(this);
@@ -470,7 +492,7 @@
       this.mouseOverH = [];
       this.mouseOutH = [];
       this.mouseUpH = [];
-      for (var midi in this.keys) {
+      for (midi in this.keys) {
         this.mouseDownH[midi] = _handleMouseDown(this, midi);
         this.mouseOverH[midi] = _handleMouseOver(this, midi);
         this.mouseOutH[midi] = _handleMouseOut(this, midi);
@@ -484,16 +506,17 @@
         this.keys[midi].addEventListener("touchend", this.touchHandle);
       }
     }
-    for (var midi in this.keys) {
+    for (midi in this.keys) {
       this.keys[midi].ondragstart = _returnFalse;
       this.keys[midi].onselectstart = _returnFalse;
     }
     if (!this.resize && this.bins.length > 1) {
       var self = this;
-      this.resize = function() { self.onResize();}
+      this.resize = function() { self.onResize(); };
       window.addEventListener('resize', this.resize);
     }
-  }
+  };
+
   Piano.prototype.cleanup = function() {
     if (this.watchButtons) {
       window.removeEventListener("mousedown", this.watchButtons);
@@ -512,8 +535,10 @@
       }
     }
     if (this.at) this.at.innerHTML = '';
-  }
-  Piano.prototype.settings = function() { return _copy(this.current); }
+  };
+
+  Piano.prototype.settings = function() { return _copy(this.current); };
+
   Piano.prototype.onResize = function() {
     var bin = 0;
     for (var i = 0; i < this.bins.length; i++) {
@@ -523,13 +548,15 @@
     if (this.current == this.params[bin]) return;
     this.current = this.params[bin];
     this.createCurrent();
-  }
+  };
+
   Piano.prototype.getKey = function(note) {
     var keys = new Keys(this);
     var k = JZZ.MIDI.noteValue(note);
     if (typeof this.keys[k] != 'undefined') keys.keys.push(k);
     return keys;
-  }
+  };
+
   Piano.prototype.getKeys = function(from, to) {
     var keys = new Keys(this);
     var n0 = typeof from == 'undefined' ? undefined : JZZ.MIDI.noteValue(from);
@@ -541,7 +568,8 @@
       keys.keys.push(k);
     }
     return keys;
-  }
+  };
+
   Piano.prototype.getWhiteKeys = function(from, to) {
     var keys = new Keys(this);
     var n0 = typeof from == 'undefined' ? undefined : JZZ.MIDI.noteValue(from);
@@ -555,7 +583,8 @@
       keys.keys.push(k);
     }
     return keys;
-  }
+  };
+
   Piano.prototype.getBlackKeys = function(from, to) {
     var keys = new Keys(this);
     var n0 = typeof from == 'undefined' ? undefined : JZZ.MIDI.noteValue(from);
@@ -569,29 +598,33 @@
       keys.keys.push(k);
     }
     return keys;
-  }
+  };
 
   function Keys(piano) {
     this.piano = piano;
     this.keys = [];
   }
+
   Keys.prototype.setInnerHTML = function(html) {
     for (var k in this.keys) this.piano.keys[this.keys[k]].innerHTML = html;
     return this;
-  }
+  };
+
   Keys.prototype.setStyle = function(s0, s1) {
+    var k, n, midi;
     if (typeof s1 == 'undefined') s1 = s0;
-    for (var k in this.keys) {
-      var midi = this.keys[k];
-      for (var n in s0) this.piano.stl0[midi][n] = s0[n];
-      for (var n in s1) this.piano.stl1[midi][n] = s1[n];
+    for (k in this.keys) {
+      midi = this.keys[k];
+      for (n in s0) this.piano.stl0[midi][n] = s0[n];
+      for (n in s1) this.piano.stl1[midi][n] = s1[n];
       _style(this.piano.keys[midi], this.piano.playing[midi] ? this.piano.stl1[midi] :  this.piano.stl0[midi]);
       _style(this.piano.keys[midi], this.piano.locs[midi]);
     }
     return this;
-  }
+  };
 
   function KbdEngine() {}
+
   KbdEngine.prototype._info = function(name) {
     return {
       type: 'html/javascript',
@@ -599,25 +632,26 @@
       manufacturer: 'virtual',
       version: _version
     };
-  }
+  };
+
   KbdEngine.prototype._openIn = function(port, name) {
     var piano = new Piano(this._arg);
-    piano.send = function() { port.send.apply(port, arguments); }
-    piano.connect = function() { port.connect.apply(port, arguments); }
+    piano.send = function() { port.send.apply(port, arguments); };
+    piano.connect = function() { port.connect.apply(port, arguments); };
     piano.create();
     piano.noteOn = function(note) { port._emit(JZZ.MIDI(0x90 + this.chan, note, 127)); };
     piano.noteOff = function(note) { port._emit(JZZ.MIDI(0x80 + this.chan, note, 127)); };
     piano.emit = function(msg) { port._emit(msg); };
     port._info = this._info(name);
     port._receive = function(msg) { piano.forward(msg); };
-    port._close = function(){ piano._close(); }
-    port.settings = function() { return piano.settings(); }
-    port.getKey = function(note) { return piano.getKey(note); }
-    port.getKeys = function(a, b) { return piano.getKeys(a, b); }
-    port.getWhiteKeys = function(a, b) { return piano.getWhiteKeys(a, b); }
-    port.getBlackKeys = function(a, b) { return piano.getBlackKeys(a, b); }
+    port._close = function() { piano._close(); };
+    port.settings = function() { return piano.settings(); };
+    port.getKey = function(note) { return piano.getKey(note); };
+    port.getKeys = function(a, b) { return piano.getKeys(a, b); };
+    port.getWhiteKeys = function(a, b) { return piano.getWhiteKeys(a, b); };
+    port.getBlackKeys = function(a, b) { return piano.getBlackKeys(a, b); };
     port._resume();
-  }
+  };
 
   JZZ.input.Kbd = function() {
     var name, arg;
@@ -626,10 +660,10 @@
       else arg = arguments[0];
     }
     else { name = arguments[0]; arg = arguments[1];}
-    var _KbdEngine = new KbdEngine;
+    var _KbdEngine = new KbdEngine();
     _KbdEngine._arg = arg;
     return JZZ.lib.openMidiIn(name, _KbdEngine);
-  }
+  };
 
   JZZ.input.Kbd.register = function() {
     var name, arg;
@@ -638,15 +672,18 @@
       else arg = arguments[0];
     }
     else { name = arguments[0]; arg = arguments[1];}
-    var _KbdEngine = new KbdEngine;
+    var _KbdEngine = new KbdEngine();
     _KbdEngine._arg = arg;
     return JZZ.lib.registerMidiIn(name, _KbdEngine);
-  }
+  };
+
 ////////////////////////////////////////////////////////////////////////
+
   var _innerStyle = {margin:0, padding:0, width:'100%', height:'100%'};
+
   function _Data(d) {
-    this.base = .5;
-    this.val = .5;
+    this.base = 0.5;
+    this.val = 0.5;
     this.msb = 0;
     this.lsb = 0;
     this.chan = 0;
@@ -677,17 +714,20 @@
     this.val = -1;
     this.setValue(this.base);
   }
+
   _Data.prototype.setBase = function(x) {
     x = parseFloat(x);
     if (!isNaN(x) && isFinite(x) && x >= 0 && x <= 1) this.base = x;
-  }
+  };
+
   _Data.prototype.setValue = function(x) {
     x = parseFloat(x);
     if (isNaN(x) || !isFinite(x) || x < 0 || x > 1 || x == this.val) return;
     this.val = x;
     this.num = Math.round(x * (this.lsb || !this.msb ? 0x3fff : 0x7f));
     return true;
-  }
+  };
+
   _Data.prototype.emit = function(out) {
     if (!this.msb) {
       out.emit([0xe0 + this.chan, this.num & 0x7f, this.num >> 7]);
@@ -699,7 +739,8 @@
       out.emit([0xb0 + this.chan, this.msb, this.num >> 7]);
       out.emit([0xb0 + this.chan, this.lsb, this.num & 0x7f]);
     }
-  }
+  };
+
   _Data.prototype.read = function(msg) {
     if (!this.msb && msg[0] == 0xe0 + this.chan && msg[1] == parseInt(msg[1]) && msg[2] == parseInt(msg[2])) {
       this.num = (msg[2] << 7) | (msg[1] & 0x7f);
@@ -724,8 +765,10 @@
         return true;
       }
     }
-  }
+  };
+
 ////////////////////////////////////////////////////////////////////////////
+
   function _Span(ctrl, span, inner, stl, stl0, stl1) {
     this.ctrl = ctrl;
     this.span = span;
@@ -734,20 +777,26 @@
     this.stl0 = stl0;
     this.stl1 = stl1;
   }
+
   _Span.prototype.setInnerHTML = function(html) {
     this.inner.innerHTML = html;
     return this;
-  }
+  };
+
   _Span.prototype.setStyle = function(s0, s1) {
     if (typeof s1 == 'undefined') s1 = s0;
-    for(var k in s0) this.stl0[k] = s0[k];
-    for(var k in s1) this.stl1[k] = s1[k];
+    var k;
+    for(k in s0) this.stl0[k] = s0[k];
+    for(k in s1) this.stl1[k] = s1[k];
     _style(this.span, this.ctrl.isSelected() ? this.stl1 : this.stl0);
     _style(this.span, this.stl);
     return this;
-  }
+  };
+
 ////////////////////////////////////////////////////////////////////////////
+
   function _Knob() {}
+
   function _initKnob(arg, common) {
     this.bins = [];
     this.params = {0:{}};
@@ -770,12 +819,14 @@
         if (!(k in this.params[key])) this.params[key][k] = common[k];
       }
     }
-    this.bins.sort(function(a, b){return a-b});
+    this.bins.sort(function(a, b) { return a - b; });
   }
+
   _Knob.prototype._close = function() {
     if (this.at) this.at.innerHTML = '';
     if (this.mouseUpHandler) window.removeEventListener("mouseup", this.mouseUpHandler);
-  }
+  };
+
   _Knob.prototype.create = function() {
     var bin = 0;
     for (var i = 0; i < this.bins.length; i++) {
@@ -784,19 +835,21 @@
     }
     this.current = this.params[bin];
     this.createCurrent();
-  }
+  };
+
   _Knob.prototype.createCurrent = function() {
     if (this.at) this.at.innerHTML = '';
     if (typeof this.current.at == 'string') this.current.at = document.getElementById(this.current.at);
     try { this.createAt(this.current.at); }
     catch(e) {
       if (!this.bottom) {
-        this.bottom = document.createElement('div'); 
+        this.bottom = document.createElement('div');
         document.body.appendChild(this.bottom);
       }
       this.createAt(this.bottom);
     }
-  }
+  };
+
   _Knob.prototype.onResize = function() {
     var bin = 0;
     for (var i = 0; i < this.bins.length; i++) {
@@ -806,12 +859,16 @@
     if (this.current == this.params[bin]) return;
     this.current = this.params[bin];
     this.createCurrent();
-  }
-  _Knob.prototype.settings = function() { return _copy(this.current); }
-  _Knob.prototype.isSelected = function() { return typeof this.dragX != 'undefined'; }
+  };
+
+  _Knob.prototype.settings = function() { return _copy(this.current); };
+
+  _Knob.prototype.isSelected = function() { return typeof this.dragX != 'undefined'; };
+
   _Knob.prototype.restyle = function() {
     for (var i in this.spans) this.spans[i].setStyle();
-  }
+  };
+
   _Knob.prototype.onMouseDown = function(e) {
     if (typeof this.dragX != 'undefined') return;
     this.dragX = e.clientX;
@@ -821,13 +878,16 @@
     window.addEventListener('mousemove', this.mouseMove);
     window.addEventListener('mouseup', this.mouseUp);
     this.restyle();
-  }
+  };
+
   _Knob.prototype.onMouseMove = function(e) {
     if (typeof this.dragX != 'undefined') this.onMove(e.clientX, e.clientY);
-  }
+  };
+
   _Knob.prototype.onMouseUp = function(e) {
 // mouse or touch ended
-  }
+  };
+
   _Knob.prototype.onTouchStart = function(e) {
     e.preventDefault();
     if (typeof this.dragX != 'undefined') return;
@@ -835,7 +895,8 @@
     this.dragX = e.targetTouches[0].clientX;
     this.dragY = e.targetTouches[0].clientY;
     this.restyle();
-  }
+  };
+
   _Knob.prototype.onTouchMove = function(e) {
     e.preventDefault();
     if (typeof this.dragX == 'undefined' || typeof this.touch == 'undefined') return;
@@ -843,14 +904,16 @@
       this.onMove(e.targetTouches[i].clientX, e.targetTouches[i].clientY);
       return;
     }
-  }
+  };
+
   _Knob.prototype.onTouchEnd = function(e) {
     e.preventDefault();
     this.touch = undefined;
     this.dragX = undefined;
     this.restyle();
     this.onMouseUp(e);
-  }
+  };
+
   function _MouseDown(x) { return function(e) { _firefoxBug = e.buttons; if (_lftBtnDn(e)) x.onMouseDown(e); }; }
   function _MouseMove(x) { return function(e) { _firefoxBug = e.buttons; x.onMouseMove(e); }; }
   function _MouseUp(x) { return function(e) {
@@ -867,11 +930,15 @@
   function _TouchMove(x) { return function(e) { x.onTouchMove(e); }; }
   function _TouchEnd(x) { return function(e) { x.onTouchEnd(e); }; }
   function _IgnoreTouch(e) { e.preventDefault(); }
+
 ////////////////////////////////////////////////////////////////////////////
+
   function Slider(arg) {
     _initKnob.call(this, arg, {pos:'N', rw:2, rh:128, kw:24, kh:16});
   }
-  Slider.prototype = new _Knob;
+
+  Slider.prototype = new _Knob();
+
   Slider.prototype.createAt = function(at) {
     at.innerHTML = '';
     var bh = parseInt(this.current.bh);
@@ -960,7 +1027,7 @@
     at.appendChild(box);
     if (!this.at && this.bins.length > 1) {
       var self = this;
-      this.resize = function() { self.onResize(); }
+      this.resize = function() { self.onResize(); };
       window.addEventListener('resize', this.resize);
     }
     this.current.at = at;
@@ -972,15 +1039,19 @@
     _style(this.range, this.stlR);
     _style(this.knob, typeof this.dragX == 'undefined' ? this.stlK0 : this.stlK1);
     _style(this.knob, this.stlK);
-  }
-  Slider.prototype.getBox = function() { return this.boxSpan; }
-  Slider.prototype.getRange = function() { return this.rangeSpan; }
-  Slider.prototype.getKnob = function() { return this.knobSpan; }
+  };
+
+  Slider.prototype.getBox = function() { return this.boxSpan; };
+
+  Slider.prototype.getRange = function() { return this.rangeSpan; };
+
+  Slider.prototype.getKnob = function() { return this.knobSpan; };
+
   Slider.prototype.setValue = function(x) {
     if (typeof x == 'undefined') x = this.data.val;
     else if (!this.data.setValue(x)) return;
     x = this.data.val;
-    if (this.pos == 'N' || this.pos == 'W') x = 1. - x;
+    if (this.pos == 'N' || this.pos == 'W') x = 1.0 - x;
     x *= this.rh;
     this.coord = x;
     x += this.dy;
@@ -992,7 +1063,8 @@
       this.stlK.left = x + 'px';
       this.knob.style.left = x + 'px';
     }
-  }
+  };
+
   Slider.prototype.onMove = function(x, y) {
     var coord;
     if (this.pos == 'N' || this.pos == 'S') coord = this.coord + y - this.dragY;
@@ -1000,7 +1072,8 @@
     if (coord < 0) coord = 0;
     if (coord > this.rh) coord = this.rh;
     this.move(coord);
-  }
+  };
+
   Slider.prototype.move = function(coord) {
     if (this.coord == coord) return;
     if (this.pos == 'N' || this.pos == 'S') {
@@ -1014,21 +1087,24 @@
       this.dragX += coord - this.coord;
     }
     var x = coord / this.rh;
-    if (this.pos == 'N' || this.pos == 'W') x = 1. - x;
+    if (this.pos == 'N' || this.pos == 'W') x = 1.0 - x;
     if (this.data.setValue(x)) this.data.emit(this);
     this.coord = coord;
-  }
+  };
+
   Slider.prototype.forward = function(msg) {
     this.emit(msg);
     if (this.data.read(msg)) {
       this.setValue();
     }
-  }
+  };
+
 ////////////////////////////////////////////////////////////////////////////
+
   function Pad(arg) {
     _initKnob.call(this, arg, {pos:'N', rw:128, rh:128, kw:24, kh:16});
   }
-  Pad.prototype = new _Knob;
+  Pad.prototype = new _Knob();
   Pad.prototype.createAt = function(at) {
     at.innerHTML = '';
     var bh = parseInt(this.current.bh);
@@ -1124,7 +1200,7 @@
     at.appendChild(box);
     if (!this.at && this.bins.length > 1) {
       var self = this;
-      this.resize = function() { self.onResize(); }
+      this.resize = function() { self.onResize(); };
       window.addEventListener('resize', this.resize);
     }
     this.current.at = at;
@@ -1136,10 +1212,14 @@
     _style(this.range, this.stlR);
     _style(this.knob, typeof this.dragX == 'undefined' ? this.stlK0 : this.stlK1);
     _style(this.knob, this.stlK);
-  }
-  Pad.prototype.getBox = function() { return this.boxSpan; }
-  Pad.prototype.getRange = function() { return this.rangeSpan; }
-  Pad.prototype.getKnob = function() { return this.knobSpan; }
+  };
+
+  Pad.prototype.getBox = function() { return this.boxSpan; };
+
+  Pad.prototype.getRange = function() { return this.rangeSpan; };
+
+  Pad.prototype.getKnob = function() { return this.knobSpan; };
+
   Pad.prototype.setValue = function(x, y) {
     if (typeof x == 'undefined') {
       x = this.dataX.val;
@@ -1148,8 +1228,8 @@
     else if (!this.dataX.setValue(x) && !this.dataY.setValue(y)) return;
     x = this.dataX.val;
     y = this.dataY.val;
-    if (this.pos == 'N' || this.pos == 'W') y = 1. - y;
-    if (this.pos == 'S' || this.pos == 'W') x = 1. - x;
+    if (this.pos == 'N' || this.pos == 'W') y = 1.0 - y;
+    if (this.pos == 'S' || this.pos == 'W') x = 1.0 - x;
     x *= this.rw;
     y *= this.rh;
     if (this.pos == 'N' || this.pos == 'S') {
@@ -1172,7 +1252,8 @@
     }
     this.knob.style.left = this.stlK.left;
     this.knob.style.top = this.stlK.top;
-  }
+  };
+
   Pad.prototype.onMove = function(x, y) {
     x = this.coordX + x - this.dragX;
     y = this.coordY + y - this.dragY;
@@ -1203,19 +1284,23 @@
     }
     x /= this.rw;
     y /= this.rh;
-    if (this.pos == 'N' || this.pos == 'W') y = 1. - y;
-    if (this.pos == 'S' || this.pos == 'W') x = 1. - x;
+    if (this.pos == 'N' || this.pos == 'W') y = 1.0 - y;
+    if (this.pos == 'S' || this.pos == 'W') x = 1.0 - x;
     if (this.dataX.setValue(x)) this.dataX.emit(this);
     if (this.dataY.setValue(y)) this.dataY.emit(this);
-  }
+  };
+
   Pad.prototype.forward = function(msg) {
     this.emit(msg);
     if (this.dataX.read(msg) || this.dataY.read(msg)) {
       this.setValue();
     }
-  }
+  };
+
 ////////////////////////////////////////////////////////////////////////////
+
   function EngSlider() {}
+
   EngSlider.prototype._info = function(name) {
     return {
       type: 'html/javascript',
@@ -1223,23 +1308,24 @@
       manufacturer: 'virtual',
       version: _version
     };
-  }
+  };
+
   EngSlider.prototype._openIn = function(port, name) {
     var slider = new Slider(this._arg);
-    slider.connect = function() { port.connect.apply(port, arguments); }
-    slider.send = function() { port.send.apply(port, arguments); }
+    slider.connect = function() { port.connect.apply(port, arguments); };
+    slider.send = function() { port.send.apply(port, arguments); };
     slider.create();
     slider.emit = function(msg) { port._emit(msg); };
     port._info = this._info(name);
     port._receive = function(msg) { slider.forward(msg); };
-    port._close = function(){ slider._close(); }
-    port.settings = function() { return slider.settings(); }
-    port.getBox = function() { return slider.boxSpan; }
-    port.getRange = function() { return slider.rangeSpan; }
-    port.getKnob = function() { return slider.knobSpan; }
-    port.setValue = function(x) { slider.setValue(x);}
+    port._close = function() { slider._close(); };
+    port.settings = function() { return slider.settings(); };
+    port.getBox = function() { return slider.boxSpan; };
+    port.getRange = function() { return slider.rangeSpan; };
+    port.getKnob = function() { return slider.knobSpan; };
+    port.setValue = function(x) { slider.setValue(x); };
     port._resume();
-  }
+  };
 
   JZZ.input.Slider = function() {
     var name, arg;
@@ -1248,10 +1334,10 @@
       else arg = arguments[0];
     }
     else { name = arguments[0]; arg = arguments[1];}
-    var _engine = new EngSlider;
+    var _engine = new EngSlider();
     _engine._arg = arg;
     return JZZ.lib.openMidiIn(name, _engine);
-  }
+  };
 
   JZZ.input.Slider.register = function() {
     var name, arg;
@@ -1260,12 +1346,15 @@
       else arg = arguments[0];
     }
     else { name = arguments[0]; arg = arguments[1];}
-    var _engine = new EngSlider;
+    var _engine = new EngSlider();
     _engine._arg = arg;
     return JZZ.lib.registerMidiIn(name, _engine);
-  }
+  };
+
 ////////////////////////////////////////////////////////////////////////////
+
   function EngPad() {}
+
   EngPad.prototype._info = function(name) {
     return {
       type: 'html/javascript',
@@ -1273,23 +1362,24 @@
       manufacturer: 'virtual',
       version: _version
     };
-  }
+  };
+
   EngPad.prototype._openIn = function(port, name) {
     var pad = new Pad(this._arg);
-    pad.connect = function() { port.connect.apply(port, arguments); }
-    pad.send = function() { port.send.apply(port, arguments); }
+    pad.connect = function() { port.connect.apply(port, arguments); };
+    pad.send = function() { port.send.apply(port, arguments); };
     pad.create();
     pad.emit = function(msg) { port._emit(msg); };
     port._info = this._info(name);
     port._receive = function(msg) { pad.forward(msg); };
-    port._close = function(){ pad._close(); }
-    port.settings = function() { return pad.settings(); }
-    port.getBox = function() { return pad.boxSpan; }
-    port.getRange = function() { return pad.rangeSpan; }
-    port.getKnob = function() { return pad.knobSpan; }
-    port.setValue = function(x) { pad.setValue(x);}
+    port._close = function() { pad._close(); };
+    port.settings = function() { return pad.settings(); };
+    port.getBox = function() { return pad.boxSpan; };
+    port.getRange = function() { return pad.rangeSpan; };
+    port.getKnob = function() { return pad.knobSpan; };
+    port.setValue = function(x) { pad.setValue(x); };
     port._resume();
-  }
+  };
 
   JZZ.input.Pad = function() {
     var name, arg;
@@ -1298,10 +1388,10 @@
       else arg = arguments[0];
     }
     else { name = arguments[0]; arg = arguments[1];}
-    var _engine = new EngPad;
+    var _engine = new EngPad();
     _engine._arg = arg;
     return JZZ.lib.openMidiIn(name, _engine);
-  }
+  };
 
   JZZ.input.Pad.register = function() {
     var name, arg;
@@ -1310,9 +1400,9 @@
       else arg = arguments[0];
     }
     else { name = arguments[0]; arg = arguments[1];}
-    var _engine = new EngPad;
+    var _engine = new EngPad();
     _engine._arg = arg;
     return JZZ.lib.registerMidiIn(name, _engine);
-  }
+  };
 
 });
