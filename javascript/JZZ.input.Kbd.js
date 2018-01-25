@@ -3,7 +3,7 @@
     module.exports = factory;
   }
   else if (typeof define === 'function' && define.amd) {
-    define('JZZ.midi.Kbd', ['JZZ'], factory);
+    define('JZZ.input.Kbd', ['JZZ'], factory);
   }
   else {
     factory(JZZ);

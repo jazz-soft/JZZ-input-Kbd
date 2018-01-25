@@ -30,7 +30,7 @@ or get full development version and minified scripts from [**GitHub**](https://g
     <script src="JZZ.input.Kbd.js"></script>
     //...
 
-##### CommonJS (Browserify and Node.js command line applications)
+##### CommonJS
 
     var JZZ = require('jzz');
     require('jzz-input-kbd')(JZZ);
