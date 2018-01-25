@@ -11,7 +11,8 @@
 
 <body>
 <h1>JZZ.input.Kbd test</h1>
-<div id=piano></id>
+<span id=pad></span>
+<span id=piano></span>
 
 <script><!--
 var piano = JZZ.input.Kbd({at: 'piano', from:'C5', to:'B5', onCreate: function(){
@@ -31,6 +32,7 @@ var piano = JZZ.input.Kbd({at: 'piano', from:'C5', to:'B5', onCreate: function()
 }});
 piano.connect(JZZ().openMidiOut());
 JZZ.input.ASCII({Z:'C5', S:'C#5', X:'D5', D:'D#5', C:'E5', V:'F5', G:'F#5', B:'G5', H:'Ab5', N:'A5', J:'Bb5', M:'B5'}).connect(piano);
+JZZ.input.Pad({at: 'pad'}).connect(piano);
 --></script>
 
 <p>

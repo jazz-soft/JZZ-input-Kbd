@@ -1,0 +1,37 @@
+{
+  "name": "jzz-input-kbd",
+  "description": "Virtual piano controls for your MIDI projects",
+  "authors": [
+    "jazz-soft (http://jazz-soft.net/)"
+  ],
+  "main": "javascript/JZZ.input.Kbd.js",
+  "moduleType": [
+    "amd",
+    "node",
+    "globals"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "MIDI",
+    "midi",
+    "webmidi",
+    "webmidiapi",
+    "web-midi",
+    "web-midi-api",
+    "piano",
+    "keyboard"
+  ],
+  "homepage": "https://github.com/jazz-soft/JZZ-input-Kbd",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "data",
+    "minified",
+    "test.*",
+    "Gruntfile.js"
+  ],
+  "dependencies": {
+    "jzz": "^0.4.2"
+  }
+}
