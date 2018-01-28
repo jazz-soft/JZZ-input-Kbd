@@ -16,10 +16,8 @@ Ready for responsive design.
 
 ## Install
 
-[**npm install jzz-input-kbd**](https://www.npmjs.com/package/jzz-input-kbd)
-
-**bower install jzz-input-kbd**
-
+[**npm install jzz-input-kbd**](https://www.npmjs.com/package/jzz-input-kbd)  
+**bower install jzz-input-kbd**  
 or get full development version and minified scripts from [**GitHub**](https://github.com/jazz-soft/JZZ-input-Kbd)
 
 ## Usage
@@ -44,16 +42,12 @@ or get full development version and minified scripts from [**GitHub**](https://g
 
 ## Classes
 
-[**JZZ.input.Kbd**](https://jazz-soft.net/doc/JZZ/inputKbd.html) - Virtual HTML piano keyboard
-
-[**JZZ.input.ASCII**](https://jazz-soft.net/doc/JZZ/inputASCII.html) - Map ASCII keys to MIDI
-
-[**JZZ.input.Slider**](https://jazz-soft.net/doc/JZZ/inputKnobs.html) - Slider MIDI control
-
+[**JZZ.input.Kbd**](https://jazz-soft.net/doc/JZZ/inputKbd.html) - Virtual HTML piano keyboard  
+[**JZZ.input.ASCII**](https://jazz-soft.net/doc/JZZ/inputASCII.html) - Map ASCII keys to MIDI  
+[**JZZ.input.Slider**](https://jazz-soft.net/doc/JZZ/inputKnobs.html) - Slider MIDI control  
 [**JZZ.input.Pad**](https://jazz-soft.net/doc/JZZ/inputKnobs.html) - Two-dimensional MIDI control
 
 ## More information
 
-Please visit [**https://jazz-soft.net**](https://jazz-soft.net) for more information.
-
+Please visit [**https://jazz-soft.net**](https://jazz-soft.net) for more information.  
 Your questions and comments are welcome [**here**](https://jazz-soft.org).
