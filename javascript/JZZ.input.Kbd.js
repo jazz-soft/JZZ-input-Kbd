@@ -13,7 +13,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '1.0.0';
+  var _version = '1.0.1';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _copy(obj) {
@@ -36,8 +36,15 @@
     this.notes = {};
     this.playing = [];
     if (typeof arg == 'undefined') arg = {};
-    this.chan = _channelMap[arg.chan];
-    if (typeof this.chan == 'undefined') this.chan = 0;
+    if (typeof arg.mpe != 'undefined') {
+      JZZ.MPE.validate(arg.mpe);
+      this.mpe = arg.mpe;
+      this.chan = arg.mpe[0];
+    }
+    else {
+      this.chan = _channelMap[arg.chan];
+      if (typeof this.chan == 'undefined') this.chan = 0;
+    }
     for (var k in arg) {
       var key = _keycode[k];
       var val = JZZ.MIDI.noteValue(arg[k]);
@@ -95,8 +102,24 @@
 
   AsciiEngine.prototype._openIn = function(port, name) {
     var keyboard = new Keyboard(this._arg);
-    keyboard.noteOn = function(note) { port._emit(JZZ.MIDI(0x90 + this.chan, note, 127)); };
-    keyboard.noteOff = function(note) { port._emit(JZZ.MIDI(0x80 + this.chan, note, 127)); };
+    if (keyboard.mpe) {
+      if (!port._orig._mpe) port._orig._mpe = JZZ.MPE();
+      port._orig._mpe.setup(keyboard.mpe[0], keyboard.mpe[1]);
+      keyboard.noteOn = function(note) {
+        var msg = JZZ.MIDI(0x90 + this.chan, note, 127);
+        msg._mpe = note;
+        port._receive(msg);
+      };
+      keyboard.noteOff = function(note) {
+        var msg = JZZ.MIDI(0x80 + this.chan, note, 127);
+        msg._mpe = note;
+        port._receive(msg);
+      };
+    }
+    else {
+      keyboard.noteOn = function(note) { port._receive(JZZ.MIDI(0x90 + this.chan, note, 127)); };
+      keyboard.noteOff = function(note) { port._receive(JZZ.MIDI(0x80 + this.chan, note, 127)); };
+    }
     port._info = this._info(name);
     port._close = function() { keyboard._close(); };
     port._resume();
@@ -238,8 +261,15 @@
     this.params = {0:{}};
     var common = {from:'C4', to:'E6', ww:42, bw:24, wl:150, bl:100, pos:'N'};
     if (typeof arg == 'undefined') arg = {};
-    this.chan = _channelMap[arg.chan];
-    if (typeof this.chan == 'undefined') this.chan = 0;
+    if (typeof arg.mpe != 'undefined') {
+      JZZ.MPE.validate(arg.mpe);
+      this.mpe = arg.mpe;
+      this.chan = arg.mpe[0];
+    }
+    else {
+      this.chan = _channelMap[arg.chan];
+      if (typeof this.chan == 'undefined') this.chan = 0;
+    }
     var key;
     for (key in arg) {
       if (key == parseInt(key)) this.params[key] = _copy(arg[key]);
@@ -285,7 +315,8 @@
 
   Piano.prototype.forward = function(msg) {
     var n = msg[1];
-    if (msg.getChannel() == this.chan) {
+    var ch = msg.getChannel();
+    if (ch >= this.chan && ch <= (this.mpe ? this.chan + this.mpe[1] : this.chan)) {
       var s = msg[0] >> 4;
       if (msg.isNoteOn()) {
         this.playing[n] = 'E';
@@ -639,9 +670,26 @@
     piano.send = function() { port.send.apply(port, arguments); };
     piano.connect = function() { port.connect.apply(port, arguments); };
     piano.create();
-    piano.noteOn = function(note) { port._emit(JZZ.MIDI(0x90 + this.chan, note, 127)); };
-    piano.noteOff = function(note) { port._emit(JZZ.MIDI(0x80 + this.chan, note, 127)); };
-    piano.emit = function(msg) { port._emit(msg); };
+
+    if (piano.mpe) {
+      if (!port._orig._mpe) port._orig._mpe = JZZ.MPE();
+      port._orig._mpe.setup(piano.mpe[0], piano.mpe[1]);
+      piano.noteOn = function(note) {
+        var msg = JZZ.MIDI(0x90 + this.chan, note, 127);
+        msg._mpe = note;
+        port._emit(port._filter(msg));
+      };
+      piano.noteOff = function(note) {
+        var msg = JZZ.MIDI(0x80 + this.chan, note, 127);
+        msg._mpe = note;
+        port._emit(port._filter(msg));
+      };
+    }
+    else {
+      piano.noteOn = function(note) { port._emit(JZZ.MIDI(0x90 + this.chan, note, 127)); };
+      piano.noteOff = function(note) { port._emit(JZZ.MIDI(0x80 + this.chan, note, 127)); };
+    }
+    piano.emit = function(msg) { port._emit(port._filter(msg)); };
     port._info = this._info(name);
     port._receive = function(msg) { piano.forward(msg); };
     port._close = function() { piano._close(); };
