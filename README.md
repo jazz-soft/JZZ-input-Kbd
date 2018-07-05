@@ -2,17 +2,17 @@
 
 Virtual piano controls for your MIDI projects
 
-[![windows](http://jazz-soft.github.io/img/windows.jpg)](https://jazz-soft.net/doc/JZZ/)
-[![mocos](http://jazz-soft.github.io/img/macos.jpg)](https://jazz-soft.net/doc/JZZ/)
-[![linux](http://jazz-soft.github.io/img/linux.jpg)](https://jazz-soft.net/doc/JZZ/)
-[![ios](http://jazz-soft.github.io/img/ios.jpg)](https://jazz-soft.net/doc/JZZ/)
-[![android](http://jazz-soft.github.io/img/android.jpg)](https://jazz-soft.net/doc/JZZ/)
+[![windows](https://jazz-soft.github.io/img/windows.jpg)](https://jazz-soft.net/doc/JZZ/)
+[![macos](https://jazz-soft.github.io/img/macos.jpg)](https://jazz-soft.net/doc/JZZ/)
+[![linux](https://jazz-soft.github.io/img/linux.jpg)](https://jazz-soft.net/doc/JZZ/)
+[![ios](https://jazz-soft.github.io/img/ios.jpg)](https://jazz-soft.net/doc/JZZ/)
+[![android](https://jazz-soft.github.io/img/android.jpg)](https://jazz-soft.net/doc/JZZ/)
 
 Keyboard, mouse and multitouch support.
 Custom styles.
 Ready for responsive design.
 
-[![kbd](http://jazz-soft.github.io/img/kbds.png)](http://jazz-soft.github.io/modules/knobs/index.html)
+[![kbd](https://jazz-soft.github.io/img/kbds.png)](https://jazz-soft.github.io/modules/knobs/index.html)
 
 ## Install
 
