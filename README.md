@@ -1,10 +1,10 @@
 # JZZ-input-Kbd
 
-[![windows](https://jazz-soft.github.io/img/windows.jpg)](https://jazz-soft.net/doc/JZZ/)
-[![macos](https://jazz-soft.github.io/img/macos.jpg)](https://jazz-soft.net/doc/JZZ/)
-[![linux](https://jazz-soft.github.io/img/linux.jpg)](https://jazz-soft.net/doc/JZZ/)
-[![ios](https://jazz-soft.github.io/img/ios.jpg)](https://jazz-soft.net/doc/JZZ/)
-[![android](https://jazz-soft.github.io/img/android.jpg)](https://jazz-soft.net/doc/JZZ/)  
+![windows](https://jazz-soft.github.io/img/windows.jpg)
+![macos](https://jazz-soft.github.io/img/macos.jpg)
+![linux](https://jazz-soft.github.io/img/linux.jpg)
+![ios](https://jazz-soft.github.io/img/ios.jpg)
+![android](https://jazz-soft.github.io/img/android.jpg)  
 [![npm](https://img.shields.io/npm/v/jzz-input-kbd.svg)](https://www.npmjs.com/package/jzz-input-kbd)
 [![npm](https://img.shields.io/npm/dt/jzz-input-kbd.svg)](https://www.npmjs.com/package/jzz-input-kbd)
 [![jsDelivr](https://data.jsdelivr.com/v1/package/npm/jzz-input-kbd/badge)](https://www.jsdelivr.com/package/npm/jzz-input-kbd)
@@ -19,7 +19,7 @@ Ready for responsive design.
 
 ## Install
 
-[**npm install jzz-input-kbd**](https://www.npmjs.com/package/jzz-input-kbd)  
+**npm install jzz-input-kbd**  
 or **bower install jzz-input-kbd**  
 or **yarn add jzz-input-kbd**  
 or get the full development version and minified scripts from [**GitHub**](https://github.com/jazz-soft/JZZ-input-Kbd)
