@@ -13,7 +13,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '1.0.2';
+  var _version = '1.0.4';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _copy(obj) {
@@ -234,7 +234,7 @@
     return function(e) {
       e.preventDefault();
       var t = {};
-      for (var i in e.touches) piano.findKey(e.touches[i].clientX, e.touches[i].clientY, t);
+      for (var i = 0; i < e.touches.length; i++) piano.findKey(e.touches[i].clientX, e.touches[i].clientY, t);
       var tt = {};
       var midi;
       for (midi in t) {

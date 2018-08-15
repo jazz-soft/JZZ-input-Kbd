@@ -1,12 +1,15 @@
 # JZZ-input-Kbd
 
-Virtual piano controls for your MIDI projects
-
 [![windows](https://jazz-soft.github.io/img/windows.jpg)](https://jazz-soft.net/doc/JZZ/)
 [![macos](https://jazz-soft.github.io/img/macos.jpg)](https://jazz-soft.net/doc/JZZ/)
 [![linux](https://jazz-soft.github.io/img/linux.jpg)](https://jazz-soft.net/doc/JZZ/)
 [![ios](https://jazz-soft.github.io/img/ios.jpg)](https://jazz-soft.net/doc/JZZ/)
 [![android](https://jazz-soft.github.io/img/android.jpg)](https://jazz-soft.net/doc/JZZ/)
+
+[![npm](https://img.shields.io/npm/v/jzz-input-kbd.svg)](https://www.npmjs.com/package/jzz-input-kbd)
+[![npm](https://img.shields.io/npm/dt/jzz-input-kbd.svg)](https://www.npmjs.com/package/jzz-input-kbd)
+
+## Virtual piano controls for your MIDI projects
 
 Keyboard, mouse and multitouch support.
 Custom styles.
