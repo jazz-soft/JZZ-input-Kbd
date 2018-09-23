@@ -19,9 +19,9 @@ Ready for responsive design.
 
 ## Install
 
-**npm install jzz-input-kbd**  
-or **bower install jzz-input-kbd**  
-or **yarn add jzz-input-kbd**  
+`npm install jzz-input-kbd`  
+or `bower install jzz-input-kbd`  
+or `yarn add jzz-input-kbd`  
 or get the full development version and minified scripts from [**GitHub**](https://github.com/jazz-soft/JZZ-input-Kbd)
 
 ## Usage
