@@ -1,6 +1,6 @@
 {
   "name": "jzz-input-kbd",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Virtual piano controls for your MIDI projects",
   "main": "javascript/JZZ.input.Kbd.js",
   "keywords": [
@@ -15,7 +15,7 @@
   ],
   "author": "jazz-soft (https://jazz-soft.net/)",
   "dependencies": {
-    "jzz": "^0.5.7"
+    "jzz": "^0.5.8"
   },
   "devDependencies": {
     "grunt": "^1.0.3",
