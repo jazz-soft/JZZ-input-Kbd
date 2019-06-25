@@ -13,7 +13,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '1.0.9';
+  var _version = '1.1.0';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _copy(obj) {
@@ -265,7 +265,6 @@
   }
 
   function Piano(arg) {
-    var self = this;
     this.bins = [];
     this.params = {0:{}};
     var common = {from:'C4', to:'E6', ww:42, bw:24, wl:150, bl:100, pos:'N'};
@@ -958,7 +957,7 @@
     if (typeof this.dragX != 'undefined') this.onMove(e.clientX, e.clientY);
   };
 
-  _Knob.prototype.onMouseUp = function(e) {
+  _Knob.prototype.onMouseUp = function() {
 // mouse or touch ended
   };
 
