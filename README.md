@@ -32,6 +32,18 @@ or get the full development version and minified scripts from [**GitHub**](https
     <script src="JZZ.input.Kbd.js"></script>
     //...
 
+##### CDN (jsdelivr)
+
+    <script src="https://cdn.jsdelivr.net/npm/jzz"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jzz-input-kbd"></script>
+    //...
+
+##### CDN (unpkg)
+
+    <script src="https://unpkg.com/jzz"></script>
+    <script src="https://unpkg.com/jzz-input-kbd"></script>
+    //...
+
 ##### CDN (always the latest version!)
 
     <script src="https://cdn.jsdelivr.net/npm/jzz"></script>

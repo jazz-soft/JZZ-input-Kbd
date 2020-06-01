@@ -13,7 +13,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '1.1.3';
+  var _version = '1.1.4';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _copy(obj) {
@@ -324,15 +324,19 @@
   };
 
   Piano.prototype.press = function(midi) {
-    _style(this.keys[midi], this.stl1[midi]);
-    _style(this.keys[midi], this.locs[midi]);
-    this.noteOn(midi);
+    if (this.keys[midi]._active) {
+      _style(this.keys[midi], this.stl1[midi]);
+      _style(this.keys[midi], this.locs[midi]);
+      this.noteOn(midi);
+    }
   };
 
   Piano.prototype.release = function(midi) {
-    _style(this.keys[midi], this.stl0[midi]);
-    _style(this.keys[midi], this.locs[midi]);
-    this.noteOff(midi);
+    if (this.keys[midi]._active) {
+      _style(this.keys[midi], this.stl0[midi]);
+      _style(this.keys[midi], this.locs[midi]);
+      this.noteOff(midi);
+    }
   };
 
   Piano.prototype.forward = function(msg) {
@@ -532,34 +536,33 @@
   };
 
   Piano.prototype.setListeners = function() {
-    var active = typeof this.current.active == 'undefined' || this.current.active;
+    var active = typeof this.current.active == 'undefined' || !!this.current.active;
     var midi;
-    if (active) {
-      this.watchButtons = _watchMouseButtons();
-      this.mouseUpHandle = _handleMouseOff(this);
-      window.addEventListener("mousedown", this.watchButtons);
-      window.addEventListener("mousemove", this.watchButtons);
-      window.addEventListener("mouseup", this.mouseUpHandle);
-      this.touchHandle = _handleTouch(this);
-      this.mouseDownH = [];
-      this.mouseOverH = [];
-      this.mouseOutH = [];
-      this.mouseUpH = [];
-      for (midi in this.keys) {
-        this.mouseDownH[midi] = _handleMouseDown(this, midi);
-        this.mouseOverH[midi] = _handleMouseOver(this, midi);
-        this.mouseOutH[midi] = _handleMouseOut(this, midi);
-        this.mouseUpH[midi] = _handleMouseUp(this, midi);
-        this.keys[midi].addEventListener("mousedown", this.mouseDownH[midi]);
-        this.keys[midi].addEventListener("mouseover", this.mouseOverH[midi]);
-        this.keys[midi].addEventListener("mouseout", this.mouseOutH[midi]);
-        this.keys[midi].addEventListener("mouseup", this.mouseUpH[midi]);
-        this.keys[midi].addEventListener("touchstart", this.touchHandle);
-        this.keys[midi].addEventListener("touchmove", this.touchHandle);
-        this.keys[midi].addEventListener("touchend", this.touchHandle);
-      }
+    this.watchButtons = _watchMouseButtons();
+    this.mouseUpHandle = _handleMouseOff(this);
+    window.addEventListener("mousedown", this.watchButtons);
+    window.addEventListener("mousemove", this.watchButtons);
+    window.addEventListener("mouseup", this.mouseUpHandle);
+    this.touchHandle = _handleTouch(this);
+    this.mouseDownH = [];
+    this.mouseOverH = [];
+    this.mouseOutH = [];
+    this.mouseUpH = [];
+    for (midi in this.keys) {
+      this.mouseDownH[midi] = _handleMouseDown(this, midi);
+      this.mouseOverH[midi] = _handleMouseOver(this, midi);
+      this.mouseOutH[midi] = _handleMouseOut(this, midi);
+      this.mouseUpH[midi] = _handleMouseUp(this, midi);
+      this.keys[midi].addEventListener("mousedown", this.mouseDownH[midi]);
+      this.keys[midi].addEventListener("mouseover", this.mouseOverH[midi]);
+      this.keys[midi].addEventListener("mouseout", this.mouseOutH[midi]);
+      this.keys[midi].addEventListener("mouseup", this.mouseUpH[midi]);
+      this.keys[midi].addEventListener("touchstart", this.touchHandle);
+      this.keys[midi].addEventListener("touchmove", this.touchHandle);
+      this.keys[midi].addEventListener("touchend", this.touchHandle);
     }
     for (midi in this.keys) {
+      if (typeof this.keys[midi]._active == 'undefined') this.keys[midi]._active = active;
       this.keys[midi].ondragstart = _returnFalse;
       this.keys[midi].onselectstart = _returnFalse;
     }
@@ -601,6 +604,16 @@
     if (this.current == this.params[bin]) return;
     this.current = this.params[bin];
     this.createCurrent();
+  };
+
+  Piano.prototype.enable = function() {
+    for (var k in this.keys) this.keys[k]._active = true;
+    return this;
+  };
+
+  Piano.prototype.disable = function() {
+    for (var k in this.keys) this.keys[k]._active = false;
+    return this;
   };
 
   Piano.prototype.getKey = function(note) {
@@ -673,6 +686,16 @@
       _style(this.piano.keys[midi], this.piano.playing[midi] ? this.piano.stl1[midi] :  this.piano.stl0[midi]);
       _style(this.piano.keys[midi], this.piano.locs[midi]);
     }
+    return this;
+  };
+
+  Keys.prototype.enable = function() {
+    for (var k in this.keys) this.piano.keys[this.keys[k]]._active = true;
+    return this;
+  };
+
+  Keys.prototype.disable = function() {
+    for (var k in this.keys) this.piano.keys[this.keys[k]]._active = false;
     return this;
   };
 
