@@ -44,12 +44,6 @@ or get the full development version and minified scripts from [**GitHub**](https
     <script src="https://unpkg.com/jzz-input-kbd"></script>
     //...
 
-##### CDN (always the latest version!)
-
-    <script src="https://cdn.jsdelivr.net/npm/jzz"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jzz-input-kbd"></script>
-    //...
-
 ##### CommonJS
 
     var JZZ = require('jzz');
