@@ -28,33 +28,43 @@ or get the full development version and minified scripts from [**GitHub**](https
 
 ##### Plain HTML
 
-    <script src="JZZ.js"></script>
-    <script src="JZZ.input.Kbd.js"></script>
-    //...
+```html
+<script src="JZZ.js"></script>
+<script src="JZZ.input.Kbd.js"></script>
+//...
+```
 
 ##### CDN (jsdelivr)
 
-    <script src="https://cdn.jsdelivr.net/npm/jzz"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jzz-input-kbd"></script>
-    //...
+```html
+<script src="https://cdn.jsdelivr.net/npm/jzz"></script>
+<script src="https://cdn.jsdelivr.net/npm/jzz-input-kbd"></script>
+//...
+```
 
 ##### CDN (unpkg)
 
-    <script src="https://unpkg.com/jzz"></script>
-    <script src="https://unpkg.com/jzz-input-kbd"></script>
-    //...
+```html
+<script src="https://unpkg.com/jzz"></script>
+<script src="https://unpkg.com/jzz-input-kbd"></script>
+//...
+```
 
 ##### CommonJS
 
-    var JZZ = require('jzz');
-    require('jzz-input-kbd')(JZZ);
-    //...
+```js
+var JZZ = require('jzz');
+require('jzz-input-kbd')(JZZ);
+//...
+```
 
 ##### AMD
 
-    require(['JZZ', 'JZZ.input.Kbd'], function(JZZ, dummy) {
-      // ...
-    });
+```js
+require(['JZZ', 'JZZ.input.Kbd'], function(JZZ, dummy) {
+  // ...
+});
+```
 
 ## Classes
 
