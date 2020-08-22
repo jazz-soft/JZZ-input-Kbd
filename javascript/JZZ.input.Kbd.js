@@ -13,7 +13,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '1.1.5';
+  var _version = '1.1.6';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _copy(obj) {
@@ -22,13 +22,55 @@
     return ret;
   }
 
-  var _keycode = {
-    ' ':32, 0:48, 1:49, 2:50, 3:51, 4:52, 5:53, 6:54, 7:55, 8:56, 9:57, '+':61, '=':61,
-    A:65, B:66, C:67, D:68, E:69, F:70, G:71, H:72, I:73, J:74, K:75, L:76, M:77,
-    N:78, O:79, P:80, Q:81, R:82, S:83, T:84, U:85, V:86, W:87, X:88, Y:89, Z:90,
-    _:173, '-':173, '[':219, '{':219, ']':221, '}':221, '|':220, '\\':220, '`':192, '~':192,
-    ';':59, ':':59, "'":222, '"':222, ',':188, '<':188, '.':190, '>':190, '/':191, '?':191
-  };
+  function _keycode(x) {
+    var z = x.toUpperCase();
+    if (z.length == 1) {
+      var k = z.charCodeAt(0);
+      if (k >= 65 && k <= 90) return 'Key' + z;
+      if (k >= 48 && k <= 57) return 'Digit' + z;
+    }
+    z = {
+      ESC: 'Escape',
+      TAB: 'Tab',
+      BSP: 'Backspace',
+      '-': 'Minus', '_': 'Minus',
+      '+': 'Equal', '=': 'Equal',
+      '[': 'BracketLeft', '{': 'BracketLeft',
+      ']': 'BracketRight', '}': 'BracketRight',
+      ';':'Semicolon', ':': 'Semicolon',
+      "'": 'Quote', '"': 'Quote',
+      '`': 'Backquote', '~': 'Backquote',
+      '|': 'Backslash', '\\': 'Backslash',
+      ',': 'Comma', '<': 'Comma',
+      '.': 'Period', '>': 'Period',
+      '/': 'Slash', '?': 'Slash',
+      ' ': 'Space'
+    }[z];
+    return z ? z : x;
+  }
+
+  function _codekey(k) {
+    if (k >= 65 && k <= 90) return 'Key' + String.fromCharCode(k);
+    if (k >= 48 && k <= 57) return 'Digit' + String.fromCharCode(k);
+    return {
+      9: 'Tab',
+      8: 'Backspace',
+      27: 'Escape',
+      32: 'Space',
+      59: 'Semicolon',
+      171: 'Equal',
+      173: 'Minus',
+      188: 'Comma',
+      190: 'Period',
+      191: 'Slash',
+      192: 'Backquote',
+      219: 'BracketLeft',
+      220: 'Backslash',
+      221: 'BracketRight',
+      222: 'Quote',
+    }[k];
+  }
+
   var _channelMap = { a:10, b:11, c:12, d:13, e:14, f:15, A:10, B:11, C:12, D:13, E:14, F:15 };
   for (var k = 0; k < 16; k++) _channelMap[k] = k;
 
@@ -46,13 +88,13 @@
       if (typeof this.chan == 'undefined') this.chan = 0;
     }
     for (var k in arg) {
-      var key = _keycode[k];
+      var key = _keycode(k);
       var val = JZZ.MIDI.noteValue(arg[k]);
       if (typeof key != 'undefined' && typeof val != 'undefined') this.notes[key] = val;
     }
     var self = this;
     this.keydown = function(e) {
-      var midi = self.notes[e.keyCode];
+      var midi = e.code ? self.notes[e.code] : self.notes[_codekey(e.keyCode)];
       if (typeof midi != 'undefined') {
         e.preventDefault();
         if (!self.playing[midi]) {
@@ -62,7 +104,7 @@
       }
     };
     this.keyup = function(e) {
-      var midi = self.notes[e.keyCode];
+      var midi = e.code ? self.notes[e.code] : self.notes[_codekey(e.keyCode)];
       if (typeof midi != 'undefined') {
         e.preventDefault();
         if (self.playing[midi]) {
