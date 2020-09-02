@@ -350,7 +350,7 @@
       var chan = _channelMap[c];
       if (typeof chan != 'undefined' && chan != this.chan) {
         for (var midi in this.playing) {
-          _style(this.keys[midi], this.stl0[midi]);
+          _style(this.keys[midi], this.keys[midi]._active ? this.stl0[midi] : this.stl2[midi]);
           _style(this.keys[midi], this.locs[midi]);
         }
         this.chan = chan;
@@ -393,7 +393,7 @@
       }
       else if (msg.isNoteOff()) {
         this.playing[n] = undefined;
-        _style(this.keys[n], this.stl0[n]);
+        _style(this.keys[n], this.keys[n]._active ? this.stl0[n] : this.stl2[n]);
         _style(this.keys[n], this.locs[n]);
       }
       else if (s == 0xb && (n == 0x78 || n == 0x7b)) { // all notes/snd off
@@ -431,7 +431,7 @@
   Piano.prototype.createCurrent = function() {
     this.cleanup();
     this.keys = {}; this.locs = {};
-    this.stl0 = {}; this.stl1 = {};
+    this.stl0 = {}; this.stl1 = {}; this.stl2 = {};
     this.playing = {}; this.touches = {};
 
     if (this.current.keys) {
@@ -458,6 +458,7 @@
       this.locs[midi] = {};
       this.stl0[midi] = {};
       this.stl1[midi] = {};
+      this.stl2[midi] = {};
     }
     if (this.current.onCreate) this.current.onCreate.apply(this);
     this.setListeners();
@@ -521,6 +522,7 @@
       }
       this.stl0[midi] = { backgroundColor:'#fff', borderColor:'#000' };
       this.stl1[midi] = { backgroundColor:'#aaa', borderColor:'#000' };
+      this.stl2[midi] = { backgroundColor:'#fff', borderColor:'#000' };
       _style(key, this.stl0[midi]);
       _style(key, stl);
       piano.appendChild(key);
@@ -566,6 +568,7 @@
       }
       this.stl0[midi] = { backgroundColor:'#000', borderColor:'#000' };
       this.stl1[midi] = { backgroundColor:'#888', borderColor:'#000' };
+      this.stl2[midi] = { backgroundColor:'#000', borderColor:'#000' };
       _style(key, this.stl0[midi]);
       _style(key, stl);
       piano.appendChild(key);
@@ -718,26 +721,40 @@
     return this;
   };
 
-  Keys.prototype.setStyle = function(s0, s1) {
+  Keys.prototype.setStyle = function(s0, s1, s2) {
     var k, n, midi;
     if (typeof s1 == 'undefined') s1 = s0;
+    if (typeof s2 == 'undefined') s2 = s0;
     for (k in this.keys) {
       midi = this.keys[k];
       for (n in s0) this.piano.stl0[midi][n] = s0[n];
       for (n in s1) this.piano.stl1[midi][n] = s1[n];
-      _style(this.piano.keys[midi], this.piano.playing[midi] ? this.piano.stl1[midi] :  this.piano.stl0[midi]);
+      for (n in s2) this.piano.stl2[midi][n] = s2[n];
+      _style(this.piano.keys[midi], this.piano.playing[midi] ? this.piano.stl1[midi] : this.piano.keys[midi]._active ?  this.piano.stl0[midi] : this.piano.stl2[midi]);
       _style(this.piano.keys[midi], this.piano.locs[midi]);
     }
     return this;
   };
 
   Keys.prototype.enable = function() {
-    for (var k in this.keys) this.piano.keys[this.keys[k]]._active = true;
+    var k, midi;
+    for (k in this.keys) {
+      midi = this.keys[k];
+      this.piano.keys[midi]._active = true;
+      _style(this.piano.keys[midi], this.piano.playing[midi] ? this.piano.stl1[midi] : this.piano.stl0[midi]);
+      _style(this.piano.keys[midi], this.piano.locs[midi]);
+    }
     return this;
   };
 
   Keys.prototype.disable = function() {
-    for (var k in this.keys) this.piano.keys[this.keys[k]]._active = false;
+    var k, midi;
+    for (k in this.keys) {
+      midi = this.keys[k];
+      this.piano.keys[midi]._active = false;
+      _style(this.piano.keys[midi], this.piano.playing[midi] ? this.piano.stl1[midi] : this.piano.stl2[midi]);
+      _style(this.piano.keys[midi], this.piano.locs[midi]);
+    }
     return this;
   };
 
