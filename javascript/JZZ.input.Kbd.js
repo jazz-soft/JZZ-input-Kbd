@@ -214,7 +214,7 @@
   function _stay(c, p) { for (; c; c = c.parentNode) if (c == p) return true; return false; }
   function _returnFalse() { return false; }
   function _style(key, stl) {
-    for(var k in stl) key.style[k] = stl[k];
+    if (key) for(var k in stl) key.style[k] = stl[k];
   }
 
   function _keyNum(n, up) {
