@@ -13,7 +13,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '1.1.8';
+  var _version = '1.1.9';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _copy(obj) {
@@ -387,20 +387,24 @@
     if (ch >= this.chan && ch <= (this.mpe ? this.chan + this.mpe[1] : this.chan)) {
       var s = msg[0] >> 4;
       if (msg.isNoteOn()) {
-        this.playing[n] = 'E';
-        _style(this.keys[n], this.stl1[n]);
-        _style(this.keys[n], this.locs[n]);
+        if (this.keys[n]) {
+          this.playing[n] = 'E';
+          _style(this.keys[n], this.stl1[n]);
+          _style(this.keys[n], this.locs[n]);
+        }
       }
       else if (msg.isNoteOff()) {
-        this.playing[n] = undefined;
-        _style(this.keys[n], this.keys[n]._active ? this.stl0[n] : this.stl2[n]);
-        _style(this.keys[n], this.locs[n]);
+        if (this.keys[n]) {
+          this.playing[n] = undefined;
+          _style(this.keys[n], this.keys[n]._active ? this.stl0[n] : this.stl2[n]);
+          _style(this.keys[n], this.locs[n]);
+        }
       }
       else if (s == 0xb && (n == 0x78 || n == 0x7b)) { // all notes/snd off
-        for (var k in this.playing) if (this.playing[k]) {
-          this.playing[k] = undefined;
-          _style(this.keys[k], this.stl0[k]);
-          _style(this.keys[k], this.locs[k]);
+        for (n in this.playing) {
+          this.playing[n] = undefined;
+          _style(this.keys[n], this.keys[n]._active ? this.stl0[n] : this.stl2[n]); 
+          _style(this.keys[n], this.locs[n]);
         }
       }
     }
@@ -460,8 +464,8 @@
       this.stl1[midi] = {};
       this.stl2[midi] = {};
     }
-    if (this.current.onCreate) this.current.onCreate.apply(this);
     this.setListeners();
+    if (this.current.onCreate) this.current.onCreate.apply(this);
   };
 
   Piano.prototype.createAt = function(at) {
@@ -573,11 +577,11 @@
       _style(key, stl);
       piano.appendChild(key);
     }
-    if (this.current.onCreate) this.current.onCreate.apply(this);
     at.appendChild(piano);
     this.current.at = at;
     this.at = at;
     this.setListeners();
+    if (this.current.onCreate) this.current.onCreate.apply(this);
   };
 
   Piano.prototype.setListeners = function() {
