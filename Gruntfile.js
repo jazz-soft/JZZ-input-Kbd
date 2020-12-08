@@ -13,7 +13,7 @@ module.exports = function(grunt) {
       }
     }
   });
-    grunt.task.registerTask('version', 'Check version consistency', function() {
+  grunt.task.registerTask('version', 'Check version consistency', function() {
     var pkg = grunt.file.readJSON('package.json');
     var JZZ = require('jzz');
     require('.')(JZZ);
