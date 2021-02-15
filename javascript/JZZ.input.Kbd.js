@@ -13,7 +13,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '1.2.0';
+  var _version = '1.2.1';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _copy(obj) {
@@ -437,6 +437,10 @@
     this.keys = {}; this.locs = {};
     this.stl0 = {}; this.stl1 = {}; this.stl2 = {};
     this.playing = {}; this.touches = {};
+    this.current.wl = parseInt(this.current.wl);
+    this.current.ww = parseInt(this.current.ww);
+    this.current.bl = parseInt(this.current.bl);
+    this.current.bw = parseInt(this.current.bw);
 
     if (this.current.keys) {
       this.createWithKeys(this.current.keys);
