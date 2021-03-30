@@ -76,4 +76,3 @@ require(['JZZ', 'JZZ.input.Kbd'], function(JZZ, dummy) {
 ## More information
 
 Please visit [**https://jazz-soft.net**](https://jazz-soft.net) for more information.  
-Your questions and comments are welcome [**here**](https://jazz-soft.org).
