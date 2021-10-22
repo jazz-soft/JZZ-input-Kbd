@@ -13,7 +13,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '1.2.1';
+  var _version = '1.2.2';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _copy(obj) {
@@ -613,6 +613,7 @@
       this.keys[midi].addEventListener("touchstart", this.touchHandle);
       this.keys[midi].addEventListener("touchmove", this.touchHandle);
       this.keys[midi].addEventListener("touchend", this.touchHandle);
+      this.keys[midi].addEventListener("touchcancel", this.touchHandle);
     }
     for (midi in this.keys) {
       if (typeof this.keys[midi]._active == 'undefined') this.keys[midi]._active = active;
@@ -641,6 +642,7 @@
         this.keys[midi].removeEventListener("touchstart", this.touchHandle);
         this.keys[midi].removeEventListener("touchmove", this.touchHandle);
         this.keys[midi].removeEventListener("touchend", this.touchHandle);
+        this.keys[midi].removeEventListener("touchcancel", this.touchHandle);
       }
     }
     if (this.at) this.at.innerHTML = '';
@@ -1189,6 +1191,7 @@
       knob.addEventListener("touchstart", _TouchStart(this));
       knob.addEventListener("touchmove", _TouchMove(this));
       knob.addEventListener("touchend", _TouchEnd(this));
+      knob.addEventListener("touchcancel", _TouchEnd(this));
     }
     if (this.current.onCreate) this.current.onCreate.apply(this);
     range.appendChild(range_);
@@ -1374,6 +1377,7 @@
       knob.addEventListener("touchstart", _TouchStart(this));
       knob.addEventListener("touchmove", _TouchMove(this));
       knob.addEventListener("touchend", _TouchEnd(this));
+      knob.addEventListener("touchcancel", _TouchEnd(this));
     }
     if (this.current.onCreate) this.current.onCreate.apply(this);
     range.appendChild(range_);

@@ -3,6 +3,7 @@
 <head>
 <title>JZZ.input.Kbd test</title>
 <script src="node_modules/jzz/javascript/JZZ.js"></script>
+<script src="node_modules/jzz-synth-tiny/javascript/JZZ.synth.Tiny.js"></script>
 <script src="javascript/JZZ.input.Kbd.js"></script>
 <style type="text/css">
 .inner {position:absolute; bottom:0; left:0; width:100%; text-align:center;}
@@ -15,6 +16,7 @@
 <span id=piano></span>
 
 <script><!--
+JZZ.synth.Tiny.register('Web Audio');
 var piano = JZZ.input.Kbd({at: 'piano', from:'C5', to:'B5', onCreate: function(){
   this.getBlackKeys().setStyle({color:'#fff'});
   this.getKey('C5').setInnerHTML('<span class=inner>Z</span>');
