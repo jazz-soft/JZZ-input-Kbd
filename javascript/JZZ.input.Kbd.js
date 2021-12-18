@@ -13,7 +13,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '1.2.2';
+  var _version = '1.2.3';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _copy(obj) {
@@ -89,15 +89,23 @@
     }
     for (var k in arg) {
       var key = _keycode(k);
-      var val = JZZ.MIDI.noteValue(arg[k]);
-      if (typeof key != 'undefined' && typeof val != 'undefined') this.notes[key] = val;
+      if (typeof arg[k] == 'function') {
+        this.midi[key] = arg[k];
+      }
+      else {
+        var val = JZZ.MIDI.noteValue(arg[k]);
+        if (typeof key != 'undefined' && typeof val != 'undefined') this.notes[key] = val;
+      }
     }
     var self = this;
     this.keydown = function(e) {
       var midi = e.code ? self.notes[e.code] : self.notes[_codekey(e.keyCode)];
       if (typeof midi != 'undefined') {
         e.preventDefault();
-        if (!self.playing[midi]) {
+        if (typeof midi == 'function') {
+          midi.apply(self, [true]);
+        }
+        else if (!self.playing[midi]) {
           self.playing[midi] = true;
           self.noteOn(midi);
         }
@@ -107,6 +115,9 @@
       var midi = e.code ? self.notes[e.code] : self.notes[_codekey(e.keyCode)];
       if (typeof midi != 'undefined') {
         e.preventDefault();
+        if (typeof midi == 'function') {
+          midi.apply(self, [false]);
+        }
         if (self.playing[midi]) {
           self.playing[midi] = undefined;
           self.noteOff(midi);
