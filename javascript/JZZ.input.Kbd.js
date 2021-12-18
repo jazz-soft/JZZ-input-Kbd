@@ -90,7 +90,7 @@
     for (var k in arg) {
       var key = _keycode(k);
       if (typeof arg[k] == 'function') {
-        this.midi[key] = arg[k];
+        this.notes[key] = arg[k];
       }
       else {
         var val = JZZ.MIDI.noteValue(arg[k]);
@@ -163,6 +163,7 @@
 
   AsciiEngine.prototype._openIn = function(port, name) {
     var keyboard = new Keyboard(this._arg);
+    keyboard.port = port;
     if (keyboard.mpe) {
       if (!port._orig._mpe) port._orig._mpe = JZZ.MPE();
       port._orig._mpe.setup(keyboard.mpe[0], keyboard.mpe[1]);

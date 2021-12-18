@@ -32,9 +32,36 @@ var piano = JZZ.input.Kbd({at: 'piano', from:'C5', to:'B5', onCreate: function()
   this.getKey('A#5').setInnerHTML('<span class=inner>J</span>');
   this.getKey('B5').setInnerHTML('<span class=inner>M</span>');
 }});
+var pad = JZZ.input.Pad({at: 'pad'});
+var ascii = JZZ.input.ASCII({Z:'C5', S:'C#5', X:'D5', D:'D#5', C:'E5', V:'F5', G:'F#5', B:'G5', H:'Ab5', N:'A5', J:'Bb5', M:'B5', '+': plus, '-': minus});
 piano.connect(JZZ().openMidiOut());
-JZZ.input.ASCII({Z:'C5', S:'C#5', X:'D5', D:'D#5', C:'E5', V:'F5', G:'F#5', B:'G5', H:'Ab5', N:'A5', J:'Bb5', M:'B5'}).connect(piano);
-JZZ.input.Pad({at: 'pad'}).connect(piano);
+pad.connect(piano);
+ascii.connect(pad);
+
+var pb = 0;
+var pbto = 0;
+function plus(on) {
+  pbto = on ? 1 : 0;
+  movepb();
+}
+function minus(on) {
+  pbto = on ? -1 : 0;
+  movepb();
+}
+function movepb() {
+  if (pb < pbto) {
+    pb += 0.1;
+    if (pb > pbto) pb = pbto;
+    ascii.pitchBendF(0, pb);
+    setTimeout(movepb, 100);
+  }
+  if (pb > pbto) {
+    pb -= 0.1;
+    if (pb < pbto) pb = pbto;
+    ascii.pitchBendF(0, pb);
+    setTimeout(movepb, 100);
+  }
+}
 --></script>
 
 <p>
