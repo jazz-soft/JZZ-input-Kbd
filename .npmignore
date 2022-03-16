@@ -1,7 +1,6 @@
+.*
 minified
 test*
-.*
-bower.json
 Gruntfile.js
 *.html
 *.bat
