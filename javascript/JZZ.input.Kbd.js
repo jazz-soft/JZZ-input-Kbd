@@ -13,7 +13,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '1.2.5';
+  var _version = '1.2.6';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _copy(obj) {
@@ -423,6 +423,14 @@
     this.emit(msg);
   };
 
+  Piano.prototype.clear = function() {
+    for (var n in this.playing) {
+      this.playing[n] = undefined;
+      _style(this.keys[n], this.keys[n]._active ? this.stl0[n] : this.stl2[n]); 
+      _style(this.keys[n], this.locs[n]);
+    }
+  };
+
   Piano.prototype.findKey = function(x, y, ret) {
     for (var midi in this.keys) {
       for (var elm = document.elementFromPoint(x, y); elm; elm = elm.parentNode) {
@@ -825,6 +833,7 @@
     port.getWhiteKeys = function(a, b) { return piano.getWhiteKeys(a, b); };
     port.getBlackKeys = function(a, b) { return piano.getBlackKeys(a, b); };
     port.channel = function(x) { return piano.channel(x); };
+    port.clear = function() { return piano.clear(); };
     port._resume();
   };
 
