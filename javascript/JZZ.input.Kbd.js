@@ -1,5 +1,6 @@
 (function(global, factory) {
   if (typeof exports === 'object' && typeof module !== 'undefined') {
+    factory.Kbd = factory;
     module.exports = factory;
   }
   else if (typeof define === 'function' && define.amd) {
@@ -13,7 +14,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '1.2.6';
+  var _version = '1.2.7';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _copy(obj) {

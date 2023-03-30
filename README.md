@@ -57,6 +57,15 @@ require('jzz-input-kbd')(JZZ);
 //...
 ```
 
+##### TypeScript / ES6
+
+```ts
+import { JZZ } from 'jzz';
+import { Kbd } from 'jzz-input-kbd';
+Kbd(JZZ);
+//...
+```
+
 ##### AMD
 
 ```js
