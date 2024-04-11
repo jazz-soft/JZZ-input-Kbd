@@ -1,10 +1,12 @@
 {
   "name": "jzz-input-kbd",
-  "version": "1.2.9",
+  "version": "1.3.0",
   "description": "Virtual piano controls for your MIDI projects",
   "main": "javascript/JZZ.input.Kbd.js",
   "scripts": {
-    "lint": "eslint javascript"
+    "test": "nyc instrument ./javascript ./test/.instrumented && nyc mocha",
+    "lint": "eslint javascript test",
+    "coverage": "nyc report --reporter=lcov"
   },
   "keywords": [
     "midi",
@@ -17,14 +19,18 @@
   ],
   "author": "jazz-soft (https://jazz-soft.net/)",
   "dependencies": {
-    "jzz": "^1.7.8"
+    "jzz": "^1.8.1"
   },
   "devDependencies": {
-    "eslint": "^8.56.0",
+    "eslint": "^9.0.0",
     "grunt": "^1.6.1",
     "grunt-contrib-jshint": "^3.2.0",
     "grunt-contrib-uglify": "^5.2.2",
-    "jzz-synth-tiny": "^1.3.8"
+    "jsdom": "^24.0.0",
+    "jzz-synth-tiny": "^1.3.9",
+    "mocha": "^10.4.0",
+    "nyc": "^15.1.0",
+    "web-midi-test": "^1.2.7"
   },
   "repository": {
     "type": "git",
