@@ -8,6 +8,8 @@
 [![npm](https://img.shields.io/npm/v/jzz-input-kbd.svg)](https://www.npmjs.com/package/jzz-input-kbd)
 [![npm](https://img.shields.io/npm/dt/jzz-input-kbd.svg)](https://www.npmjs.com/package/jzz-input-kbd)
 [![jsDelivr](https://data.jsdelivr.com/v1/package/npm/jzz-input-kbd/badge)](https://www.jsdelivr.com/package/npm/jzz-input-kbd)
+[![build](https://github.com/jazz-soft/JZZ-input-Kbd/actions/workflows/build.yml/badge.svg)](https://github.com/jazz-soft/JZZ-input-Kbd/actions)
+[![Coverage Status](https://coveralls.io/repos/github/jazz-soft/JZZ-input-Kbd/badge.svg?branch=master)](https://coveralls.io/github/jazz-soft/JZZ-input-Kbd?branch=master)
 
 ## Virtual piano controls for your MIDI projects
 

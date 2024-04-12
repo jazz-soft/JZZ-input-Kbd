@@ -1,11 +1,20 @@
 const assert = require('assert');
 const JSDOM = require('jsdom').JSDOM;
 const WMT =  require('web-midi-test');
+const version = require('../package.json').version;
+const JZZ = require('jzz');
+require('..')(JZZ);
 
 var midi_out = new WMT.MidiDst('VIRTUAL MIDI-Out');
 midi_out.connect();
 
 global.__coverage__ = {};
+
+describe('Info', function() {
+  it('version ' + version, function() {
+    assert.equal(JZZ.input.Kbd.version(), version);
+  });
+});
 
 describe('In browser', function() {
   before(function() {
