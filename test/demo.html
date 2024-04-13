@@ -10,12 +10,30 @@
 <body>
 
 <h1>JZZ-input-Kbd Test</h1>
+<span id=pad></span>
+<span id=sld1></span>
+<span id=sld2></span>
 <p id=kbd1></p>
 <p id=kbd2></p>
 
-<script><!--
-
---></script>
+<script>
+var ascii = JZZ.input.ASCII({
+  A:'F#4', Z:'G4', S:'G#4', X:'A4', D:'Bb4', C:'B4', V:'C5', G:'C#5', B:'D5',
+  H:'D#5', N:'E5', M:'F5', K:'F#5', '<':'G5', L:'G#5', '>':'A5', ':':'Bb5'
+});
+var kbd1 = JZZ.input.Kbd({at:'kbd1'});
+var kbd2 = JZZ.input.Kbd({at:'kbd2'});
+var pad = JZZ.input.Pad({at:'pad', rh:96, kw:16});
+var sld1 = JZZ.input.Slider({at:'sld1', pos:'E'});
+var sld2 = JZZ.input.Slider({at:'sld2', data:'mod', rh:96});
+pad.connect(ascii);
+pad.connect(sld1);
+pad.connect(sld2);
+sld1.connect(pad);
+sld2.connect(pad);
+ascii.connect(kbd1);
+kbd1.connect(kbd2);
+</script>
 
 </body>
 </html>

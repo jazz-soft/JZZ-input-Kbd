@@ -1,6 +1,6 @@
 .*
 minified
 test*
+coverage
 Gruntfile.js
-*.html
-*.bat
+!test
