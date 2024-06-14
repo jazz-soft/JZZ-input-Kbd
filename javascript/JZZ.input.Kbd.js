@@ -14,7 +14,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '1.3.1';
+  var _version = '1.3.2';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _copy(obj) {
@@ -416,7 +416,7 @@
       else if (s == 0xb && (n == 0x78 || n == 0x7b)) { // all notes/snd off
         for (n in this.playing) {
           this.playing[n] = undefined;
-          _style(this.keys[n], this.keys[n]._active ? this.stl0[n] : this.stl2[n]); 
+          _style(this.keys[n], this.keys[n]._active ? this.stl0[n] : this.stl2[n]);
           _style(this.keys[n], this.locs[n]);
         }
       }
@@ -427,7 +427,7 @@
   Piano.prototype.clear = function() {
     for (var n in this.playing) {
       this.playing[n] = undefined;
-      _style(this.keys[n], this.keys[n]._active ? this.stl0[n] : this.stl2[n]); 
+      _style(this.keys[n], this.keys[n]._active ? this.stl0[n] : this.stl2[n]);
       _style(this.keys[n], this.locs[n]);
     }
   };
@@ -453,15 +453,27 @@
     this.createCurrent();
   };
 
+  function _unit(a, b) {
+    a = (a + '').trim();
+    b = (b + '').trim();
+    return a.endsWith('%') && b.endsWith('%') ? '%' : 'px';
+  }
+
   Piano.prototype.createCurrent = function() {
     this.cleanup();
     this.keys = {}; this.locs = {};
     this.stl0 = {}; this.stl1 = {}; this.stl2 = {};
     this.playing = {}; this.touches = {};
-    this.current.wl = parseInt(this.current.wl);
-    this.current.ww = parseInt(this.current.ww);
-    this.current.bl = parseInt(this.current.bl);
-    this.current.bw = parseInt(this.current.bw);
+    if (!this.current.ul) {
+      this.current.ul = _unit(this.current.wl, this.current.bl);
+      this.current.wl = parseInt(this.current.wl);
+      this.current.bl = parseInt(this.current.bl);
+    }
+    if (!this.current.uw) {
+      this.current.uw = _unit(this.current.ww, this.current.bw);
+      this.current.ww = parseInt(this.current.ww);
+      this.current.bw = parseInt(this.current.bw);
+    }
 
     if (this.current.keys) {
       this.createWithKeys(this.current.keys);
@@ -499,12 +511,17 @@
     var first = _keyNum(this.current.from);
     var last = _keyNum(this.current.to, true);
     var num = last - first + 1;
-    var w = num * this.current.ww + 1;
-    var h = this.current.wl + 1;
-    var ww = this.current.ww - 1;
-    var wl = this.current.wl - 1;
-    var bw = this.current.bw - 1;
-    var bl = this.current.bl - 1;
+    var w = num * this.current.ww;
+    var h = this.current.wl;
+    var ul = this.current.ul;
+    var uw = this.current.uw;
+    var ww = this.current.ww;
+    var wl = this.current.wl;
+    var bw = this.current.bw;
+    var bl = this.current.bl;
+    if (uw != '%') { w++; ww--; bw--; }
+    if (ul != '%') { h++; wl--; bl--; }
+
     var l2r = (pos != 'N') ^ !this.current.rev;
     var t2b = (pos != 'E') ^ !this.current.rev;
     var midi;
@@ -524,12 +541,12 @@
     piano.style.cursor = 'default';
 
     if (pos == 'E' || pos == 'W') {
-      piano.style.width = h + 'px';
-      piano.style.height = w + 'px';
+      piano.style.width = h + ul;
+      piano.style.height = w + uw;
     }
     else {
-      piano.style.width = w + 'px';
-      piano.style.height = h + 'px';
+      piano.style.width = w + uw;
+      piano.style.height = h + ul;
     }
     for (var i = 0; i < num; i++) {
       midi = _keyMidi(i + first);
@@ -537,16 +554,16 @@
       stl = { display:'inline-block', position:'absolute', margin:'0px', padding:'0px', borderStyle:'solid', borderWidth:'1px' };
       this.locs[midi] = stl;
       if (pos == 'E' || pos == 'W') {
-        stl.width = wl + 'px';
-        stl.height = ww + 'px';
+        stl.width = wl + ul;
+        stl.height = ww + uw;
         stl.left = '0px';
-        stl[t2b ? 'top' : 'bottom'] = (this.current.ww * i) + 'px';
+        stl[t2b ? 'top' : 'bottom'] = (this.current.ww * i) + uw;
       }
       else {
-        stl.width = ww + 'px';
-        stl.height = wl + 'px';
+        stl.width = ww + uw;
+        stl.height = wl + ul;
         stl.top = '0px';
-        stl[l2r ? 'left' : 'right'] = (this.current.ww * i) + 'px';
+        stl[l2r ? 'left' : 'right'] = (this.current.ww * i) + uw;
         stl.verticalAlign = 'top';
       }
       this.stl0[midi] = { backgroundColor:'#fff', borderColor:'#000' };
@@ -584,16 +601,16 @@
       stl = { display:'inline-block', position:'absolute', margin:'0px', padding:'0px', borderStyle:'solid', borderWidth:'1px' };
       this.locs[midi] = stl;
       if (pos == 'E' || pos == 'W') {
-        stl.width = bl + 'px';
-        stl.height = bw + 'px';
+        stl.width = bl + ul;
+        stl.height = bw + uw;
         stl[pos == 'E' ? 'right' : 'left'] = '0px';
-        stl[t2b ? 'top' : 'bottom'] = shift + 'px';
+        stl[t2b ? 'top' : 'bottom'] = shift + uw;
       }
       else {
-        stl.width = bw + 'px';
-        stl.height = bl + 'px';
+        stl.width = bw + uw;
+        stl.height = bl + ul;
         stl[pos == 'N' ? 'top' : 'bottom'] = '0px';
-        stl[l2r ? 'left' : 'right'] = shift + 'px';
+        stl[l2r ? 'left' : 'right'] = shift + uw;
       }
       this.stl0[midi] = { backgroundColor:'#000', borderColor:'#000' };
       this.stl1[midi] = { backgroundColor:'#888', borderColor:'#000' };
