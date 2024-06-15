@@ -14,7 +14,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '1.3.2';
+  var _version = '1.3.3';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _copy(obj) {
@@ -466,13 +466,13 @@
     this.playing = {}; this.touches = {};
     if (!this.current.ul) {
       this.current.ul = _unit(this.current.wl, this.current.bl);
-      this.current.wl = parseInt(this.current.wl);
-      this.current.bl = parseInt(this.current.bl);
+      this.current.wl = parseFloat(this.current.wl);
+      this.current.bl = parseFloat(this.current.bl);
     }
     if (!this.current.uw) {
       this.current.uw = _unit(this.current.ww, this.current.bw);
-      this.current.ww = parseInt(this.current.ww);
-      this.current.bw = parseInt(this.current.bw);
+      this.current.ww = parseFloat(this.current.ww);
+      this.current.bw = parseFloat(this.current.bw);
     }
 
     if (this.current.keys) {
