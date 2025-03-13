@@ -14,7 +14,7 @@
   if (!JZZ) return;
   if (!JZZ.input) JZZ.input = {};
 
-  var _version = '1.3.3';
+  var _version = '1.3.4';
   function _name(name, deflt) { return name ? name : deflt; }
 
   function _copy(obj) {
